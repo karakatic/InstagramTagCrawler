@@ -4,34 +4,34 @@
 
 A non API way (no authentication required) to get Instagram posts by Tag in dict, json or pandas DataFrame. Crawler and example included.
 
-### Getting started
-Get the code:
+### Get the code
 ```
-git clone https://github.com/karakatic/instagram-profilecrawl.git
+git clone https://github.com/karakatic/InstagramTagCrawler.git
 ```
 
 ### Commandline use
-
 ```
 python instagramtagcrawler.py tag pages_to_crawl repeat_every_n_seconds
 ```
 
-`pages_to_crawl` (default=1) Indicates how many pages should be crawled. There are approximately 30 posts per page.
+`pages_to_crawl` (default=1)
+Indicates how many pages should be crawled. There are approximately 30 posts per page.
 
+`repeat_every_n_seconds` (default=-1)
 If you want to repeat crawling (for newer posts) every X seconds, use `repeat_every_n_seconds` argument.
-`repeat_every_n_seconds` (default=-1):
 - **-1** crawls only one time
 - **any other integer** repeat crawls indefinitely every this amount of seconds
 
 In every repeated crawl, the crawler will crawl `pages_to_crawl` pages. The posts will not repeat in the resulting file.
 
 **Example use:**
+
 Crawl for all posts with tag **#paris** for three most recent pages, and do not repeat this process.
 ```
 python instagramtagcrawler.py paris 3
 ```
 
-The information about tags will be saved in CSV format in the `./tags/{tag}.csv` file.
+The information about tags will be saved in CSV format in the `{tag}.csv` file.
 
 ### Python library use
 

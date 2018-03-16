@@ -162,7 +162,7 @@ if __name__ == "__main__":
         else:
             print('repeating it every %d seconds. Break the crawler with CTRL+C.' % repeat_sec)
 
-        print('Results are saved in the file ./tags/%s.csv' % tag)
+        print('Results are saved in the file %s.csv' % tag)
 
         crawler = InstagramTagCrawler(tag)
         df = None
@@ -180,7 +180,7 @@ if __name__ == "__main__":
                 df = pd.concat([df, df1], axis=0)
                 df = df[~df.index.duplicated(keep='last')]
 
-            df.to_csv('./tags/' + tag + '.csv')
+            df.to_csv(tag + '.csv')
             print('FINISHED')
 
             if repeat_sec != -1:
