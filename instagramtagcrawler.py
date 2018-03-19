@@ -25,10 +25,10 @@ class Post(object):
         self.code = n.get('shortcode', None)
 
         caption_tmp = n.get('edge_media_to_caption', None).get('edges', None)
-        self.caption = caption_tmp[0].get('node', None).get('text', '')
+        self.caption = caption_tmp[0].get('node', None).get('text', '').replace('"', '')
 
     def get_tags(self):
-        return {self.caption.strip("#") for tag in self.caption.split() if tag.startswith("#")}
+        return {self.caption.strip("#") for tag1 in self.caption.split() if tag1.startswith("#")}
 
     def to_dict(self):
         return {'id': self.id,
@@ -42,7 +42,8 @@ class Post(object):
                 }
 
     def to_pandas(self):
-        return pd.read_csv(StringIO(Post.header + '\n' + str(self)), index_col=0)
+        data = pd.read_csv(StringIO(Post.header + '\n' + str(self)), index_col=0)
+        return data
 
     def to_csv(self):
         return ','.join((self.id,
@@ -69,12 +70,12 @@ class InstagramTagCrawler(object):
     def to_pandas(all_posts):
         df0 = None
         for p in all_posts:
-            df1 = p.to_pandas()
+            df2 = p.to_pandas()
 
             if df0 is None:
-                df0 = df1
+                df0 = df2
             else:
-                df0 = pd.concat([df0, df1], axis=0)
+                df0 = pd.concat([df0, df2], axis=0)
 
         df0 = df0[~df0.index.duplicated(keep='last')]
 
@@ -91,7 +92,7 @@ class InstagramTagCrawler(object):
             self.url = self.url + '&max_id=' + max_id
 
         if self.verbose:
-            print('GET:', self.url, end='')
+            print('GET:', self.url, end=' ')
 
         session = requests.Session()
         r = session.get(self.url)
@@ -132,6 +133,8 @@ class InstagramTagCrawler(object):
         return resulting_posts
 
 
+debug = True
+
 if __name__ == "__main__":
     args = sys.argv
     tag = ''
@@ -168,7 +171,9 @@ if __name__ == "__main__":
         df = None
 
         while True:
-            print('Crawling (', datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'), ')...',
+            print('Crawling (',
+                  datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'),
+                  ')...',
                   end=' ')
 
             posts = crawler.get_posts(pages=pages)
